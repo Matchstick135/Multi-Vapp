@@ -7,7 +7,6 @@ import java.lang.reflect.*;
 public class ReflectUtils {
     private static final String TAG = "ReflectUtils";
 
-    // 获取特定类的 Class 对象
     public static Class<?> getClass(String className) {
         try {
             return Class.forName(className);
@@ -17,7 +16,6 @@ public class ReflectUtils {
         }
     }
 
-    // 获取类特定方法的 Method 对象
     public static Method getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
         try {
             Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
@@ -29,7 +27,6 @@ public class ReflectUtils {
         }
     }
 
-    // 获取类特定字段的 Field 对象
     public static Field getField(Class<?> clazz, String fieldName) {
         try {
             Field field = clazz.getDeclaredField(fieldName);
@@ -44,7 +41,6 @@ public class ReflectUtils {
         }
     }
 
-    // 设置对象的字段值
     public static void setFieldValue(Object obj, String fieldName, Object value) {
         try {
             Field field = getField(obj.getClass(), fieldName);
@@ -54,7 +50,6 @@ public class ReflectUtils {
         }
     }
 
-    // 获取对象的字段值
     public static Object getFieldValue(Object obj, String fieldName) {
         try {
             Field field = getField(obj.getClass(), fieldName);
@@ -65,7 +60,6 @@ public class ReflectUtils {
         }
     }
 
-    // 获取对象所有的字段值
     private static String getClassFieldValues(Object obj) {
         Class<?> clazz = obj.getClass();
         StringBuilder sb = new StringBuilder();
@@ -92,7 +86,6 @@ public class ReflectUtils {
         return sb.toString();
     }
 
-    // 打印对象所有的字段值
     public static void printFieldValues(Object obj) {
         try {
             Log.d(TAG, "printFieldValues: " + getClassFieldValues(obj));
@@ -101,7 +94,6 @@ public class ReflectUtils {
         }
     }
 
-    // 反射调用方法
     public static Object invokeMethod(Object obj, Method method, Object... args) {
         try {
             return method.invoke(obj, args);
