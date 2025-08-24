@@ -1,0 +1,16 @@
+[versions]
+agp = "8.9.1"
+livedata = "1.1.1"
+viewmodel = "1.1.1"
+navigationFragment = "1.0.0"
+navigationUi = "1.0.0"
+
+[libraries]
+livedata = { group = "android.arch.lifecycle", name = "livedata", version.ref = "livedata" }
+viewmodel = { group = "android.arch.lifecycle", name = "viewmodel", version.ref = "viewmodel" }
+navigation-fragment = { group = "android.arch.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
+navigation-ui = { group = "android.arch.navigation", name = "navigation-ui", version.ref = "navigationUi" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+
