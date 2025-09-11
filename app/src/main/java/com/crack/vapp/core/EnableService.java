@@ -9,6 +9,7 @@ import com.crack.vapp.proxy.ProxyService;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.UUID;
 
 import de.robv.android.xposed.CA_MethodHook;
 import de.robv.android.xposed.CalvinBridge;
@@ -23,10 +24,11 @@ public class EnableService {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Intent pluginIntent = (Intent) param.args[0];
-                intentMap.put("plugin", pluginIntent);
+                String uniqueKey = UUID.randomUUID().toString();
+                intentMap.put(uniqueKey, pluginIntent);
                 Intent fakeIntent = new Intent(baseActivity, ProxyService.class);
+                fakeIntent.putExtra("service_key", uniqueKey);
                 param.args[0] = fakeIntent;
-
                 super.beforeHookedMethod(param);
             }
         });
@@ -36,9 +38,17 @@ public class EnableService {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Object info = ReflectUtils.getFieldValue(param.args[0], "info");
-                if (info != null) {
-                    ReflectUtils.setFieldValue(info, "name", intentMap.get("plugin").getComponent().getClassName());
-                    ReflectUtils.setFieldValue(info, "packageName", intentMap.get("plugin").getComponent().getPackageName());
+                Object data = param.args[0];
+                Intent fakeIntent = (Intent) ReflectUtils.getFieldValue(data, "intent");
+                if (fakeIntent != null) {
+                    String uniqueKey = fakeIntent.getStringExtra("service_key");
+                    Intent pluginIntent = intentMap.get(uniqueKey);
+
+                    if (info != null && pluginIntent != null) {
+                        ReflectUtils.setFieldValue(info, "name", pluginIntent.getComponent().getClassName());
+                        ReflectUtils.setFieldValue(info, "packageName", pluginIntent.getComponent().getPackageName());
+                        intentMap.remove(uniqueKey);
+                    }
                 }
 
                 super.beforeHookedMethod(param);

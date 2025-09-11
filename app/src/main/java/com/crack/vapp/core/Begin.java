@@ -25,6 +25,9 @@ public class Begin {
 
         EnableActivity.hook();
         EnableService.hook();
+        EnableContentProvider.hook();
+        EnableBroadcastReceiver.hook();
+        EnableBroadcastReceiver.parseStaticReceivers(pluginApkPath);
 
         EnableResource.mergeResources(baseContext, pluginApkPath);
         EnableResource.replaceAssetManager();
