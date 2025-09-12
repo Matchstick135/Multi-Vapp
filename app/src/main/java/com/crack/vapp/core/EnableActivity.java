@@ -47,7 +47,7 @@ public class EnableActivity {
                 Intent pluginIntent = (Intent) param.args[4];
                 Intent fakeIntent = new Intent(baseActivity, ProxyActivity.class);
                 fakeIntent.setComponent(new ComponentName(basePackageName, proxyActivityName));
-                fakeIntent.putExtra("plugin", pluginIntent);
+                fakeIntent.putExtra("key", pluginIntent);
                 param.args[4] = fakeIntent;
 
                 super.beforeHookedMethod(param);
@@ -61,13 +61,12 @@ public class EnableActivity {
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     Object activityClientRecord = param.args[0];
                     Object LoadedApk = ReflectUtils.getFieldValue(activityClientRecord, "packageInfo");
-
                     ReflectUtils.setFieldValue(LoadedApk, "mApplication", null);
                     ReflectUtils.setFieldValue(LoadedApk, "mApplicationInfo", pluginPackageInfo.applicationInfo);
 
                     Intent fakeIntent = (Intent) ReflectUtils.getFieldValue(activityClientRecord, "intent");
                     if (fakeIntent != null) {
-                        Intent pluginIntent = (Intent) fakeIntent.getParcelableExtra("plugin");
+                        Intent pluginIntent = (Intent) fakeIntent.getParcelableExtra("key");
                         if (pluginIntent != null) {
                             ReflectUtils.setFieldValue(activityClientRecord, "intent", pluginIntent);
                         }

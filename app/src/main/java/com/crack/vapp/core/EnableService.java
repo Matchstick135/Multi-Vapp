@@ -27,7 +27,7 @@ public class EnableService {
                 String uniqueKey = UUID.randomUUID().toString();
                 intentMap.put(uniqueKey, pluginIntent);
                 Intent fakeIntent = new Intent(baseActivity, ProxyService.class);
-                fakeIntent.putExtra("service_key", uniqueKey);
+                fakeIntent.putExtra("key", uniqueKey);
                 param.args[0] = fakeIntent;
                 super.beforeHookedMethod(param);
             }
@@ -37,13 +37,13 @@ public class EnableService {
         CalvinBridge.hookAllMethods(ActivityThread, "handleCreateService", new CA_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Object info = ReflectUtils.getFieldValue(param.args[0], "info");
                 Object data = param.args[0];
                 Intent fakeIntent = (Intent) ReflectUtils.getFieldValue(data, "intent");
                 if (fakeIntent != null) {
-                    String uniqueKey = fakeIntent.getStringExtra("service_key");
+                    String uniqueKey = fakeIntent.getStringExtra("key");
                     Intent pluginIntent = intentMap.get(uniqueKey);
 
+                    Object info = ReflectUtils.getFieldValue(param.args[0], "info");
                     if (info != null && pluginIntent != null) {
                         ReflectUtils.setFieldValue(info, "name", pluginIntent.getComponent().getClassName());
                         ReflectUtils.setFieldValue(info, "packageName", pluginIntent.getComponent().getPackageName());

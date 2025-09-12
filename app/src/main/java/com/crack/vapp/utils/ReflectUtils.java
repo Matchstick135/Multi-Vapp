@@ -102,16 +102,4 @@ public class ReflectUtils {
             return null;
         }
     }
-
-    public static Object createInstance(String className) {
-        try {
-            Class<?> clazz = getClass(className);
-            if (clazz != null) {
-                return clazz.newInstance();
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Create instance failed: " + className, e);
-        }
-        return null;
-    }
 }
